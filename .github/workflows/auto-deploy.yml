@@ -35,7 +35,8 @@ jobs:
         run: pnpm run build
         env:
           ASTRO_SITE: https://3jane.github.io
-          ASTRO_BASE: /loqus-landing/
+          SITE_URL: https://3jane.github.io/astro-tina-cms-example/
+          ASTRO_BASE: /astro-tina-cms-example/
           SEGMENT_KEY: ${{ secrets.DEV_SEGMENT_KEY }}
           CHAT_URL: https://dev-chat.loqus.ai
           TINA_PUBLIC_CLIENT_ID: ${{ secrets.TINA_PUBLIC_CLIENT_ID }}
@@ -93,7 +94,8 @@ jobs:
         run: pnpm run build
         env:
           ASTRO_SITE: https://loqus.ai
-          ASTRO_BASE: /
+          SITE_URL: https://3jane.github.io/astro-tina-cms-example/
+          ASTRO_BASE: /astro-tina-cms-example/
           SEGMENT_KEY: ${{ secrets.PROD_SEGMENT_KEY }}
           CHAT_URL: https://chat.loqus.ai
           TINA_PUBLIC_CLIENT_ID: ${{ secrets.TINA_PUBLIC_CLIENT_ID }}
