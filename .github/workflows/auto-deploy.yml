@@ -41,6 +41,7 @@ jobs:
           CHAT_URL: https://dev-chat.loqus.ai
           TINA_PUBLIC_CLIENT_ID: ${{ secrets.TINA_PUBLIC_CLIENT_ID }}
           TINA_TOKEN: ${{ secrets.TINA_TOKEN }}
+          GITHUB_BRANCH: ${{ github.head_ref }}
 
       - name: 🚀 Deploy to preview
         uses: peaceiris/actions-gh-pages@v3
@@ -100,6 +101,7 @@ jobs:
           CHAT_URL: https://chat.loqus.ai
           TINA_PUBLIC_CLIENT_ID: ${{ secrets.TINA_PUBLIC_CLIENT_ID }}
           TINA_TOKEN: ${{ secrets.TINA_TOKEN }}
+          GITHUB_BRANCH: ${{ github.head_ref }}
 
       # - name: 🚀 Deploy to release
       #   uses: peaceiris/actions-gh-pages@v3

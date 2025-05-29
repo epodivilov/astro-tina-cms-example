@@ -11,7 +11,7 @@ const branch =
   "main";
 
 export default defineConfig({
-  branch,
+  branch: process.env.GITHUB_BRANCH || "main",
 
   // Get this from tina.io
   clientId: process.env.TINA_PUBLIC_CLIENT_ID,
