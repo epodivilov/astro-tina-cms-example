@@ -1,0 +1,118 @@
+name: Automatic Deployment
+
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize, reopened]
+  pull_request_target:
+    branches: [main]
+    types: [closed]
+
+env:
+  PREVIEW_URL: https://3jane.github.io/loqus-landing
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  preview:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 🛎️ Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+
+      - name: 🔧 Setup Environment
+        uses: ./.github/actions/setup-env
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: 🏗️ Build
+        run: pnpm run build
+        env:
+          ASTRO_SITE: https://3jane.github.io
+          ASTRO_BASE: /loqus-landing/
+          SEGMENT_KEY: ${{ secrets.DEV_SEGMENT_KEY }}
+          CHAT_URL: https://dev-chat.loqus.ai
+
+      - name: 🚀 Deploy to preview
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
+          publish_branch: preview
+          force_orphan: true
+          user_name: "github-actions[bot]"
+          user_email: "github-actions[bot]@users.noreply.github.com"
+          commit_message: "deploy(preview): 🔍 Deploy preview for PR #${{ github.event.number }}"
+
+      - name: 💬 Find Comment
+        uses: peter-evans/find-comment@v3
+        id: find-comment
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          comment-author: "github-actions[bot]"
+          body-includes: "🔍 Preview Environment"
+
+      - name: 💬 Create or Update Comment
+        uses: peter-evans/create-or-update-comment@v4
+        with:
+          comment-id: ${{ steps.find-comment.outputs.comment-id }}
+          issue-number: ${{ github.event.pull_request.number }}
+          body: |
+            🔍 Preview Environment
+
+            Preview deployment is ready!
+            ✨ See the preview: ${{ env.PREVIEW_URL }}
+
+            *Last updated: ${{ github.event.pull_request.updated_at }}*
+          edit-mode: replace
+
+  release:
+    if: github.event_name == 'pull_request_target' && github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 🛎️ Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: 🔧 Setup Environment
+        uses: ./.github/actions/setup-env
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: 🏗️ Build
+        run: pnpm run build
+        env:
+          ASTRO_SITE: https://loqus.ai
+          ASTRO_BASE: /
+          SEGMENT_KEY: ${{ secrets.PROD_SEGMENT_KEY }}
+          CHAT_URL: https://chat.loqus.ai
+
+      # - name: 🚀 Deploy to release
+      #   uses: peaceiris/actions-gh-pages@v3
+      #   with:
+      #     github_token: ${{ secrets.GITHUB_TOKEN }}
+      #     publish_dir: ./dist
+      #     publish_branch: release
+      #     force_orphan: true
+      #     user_name: "github-actions[bot]"
+      #     user_email: "github-actions[bot]@users.noreply.github.com"
+      #     commit_message: "deploy(release): 🚀 Deploy site to release"
+
+      - name: 🚀 Deploy to preview
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
+          publish_branch: preview
+          force_orphan: true
+          user_name: "github-actions[bot]"
+          user_email: "github-actions[bot]@users.noreply.github.com"
+          commit_message: "deploy(preview): 🔍 Deploy preview for PR #${{ github.event.number }}"
