@@ -91,3 +91,4 @@ Check out the [TinaCMS documentation](https://tina.io/docs) and the [Astro docum
 ## Credit
 
 This theme is based off of the lovely [Bear Blog](https://github.com/HermanMartinus/bearblog/).
+# astro-tina-cms-example
