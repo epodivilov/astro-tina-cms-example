@@ -11,16 +11,17 @@ const branch =
   "main";
 
 export default defineConfig({
-  branch,
+  branch: process.env.GITHUB_BRANCH || "main",
 
   // Get this from tina.io
-  clientId: process.env.PUBLIC_TINA_CLIENT_ID,
+  clientId: process.env.TINA_PUBLIC_CLIENT_ID,
   // Get this from tina.io
   token: process.env.TINA_TOKEN,
 
   build: {
     outputFolder: "admin",
     publicFolder: "public",
+    basePath: "astro-tina-cms-example"
   },
   media: {
     tina: {
@@ -30,10 +31,6 @@ export default defineConfig({
   },
   // See docs on content modeling for more info on how to setup new content models: https://tina.io/docs/schema/
   schema: {
-    collections: [
-      BlogCollection,
-      PageCollection,
-      GlobalConfigCollection,
-    ],
+    collections: [BlogCollection, PageCollection, GlobalConfigCollection],
   },
 });

@@ -35,9 +35,12 @@ jobs:
         run: pnpm run build
         env:
           ASTRO_SITE: https://3jane.github.io
-          ASTRO_BASE: /loqus-landing/
+          ASTRO_BASE: /astro-tina-cms-example/
           SEGMENT_KEY: ${{ secrets.DEV_SEGMENT_KEY }}
           CHAT_URL: https://dev-chat.loqus.ai
+          TINA_PUBLIC_CLIENT_ID: ${{ secrets.TINA_PUBLIC_CLIENT_ID }}
+          TINA_TOKEN: ${{ secrets.TINA_TOKEN }}
+          GITHUB_BRANCH: ${{ github.head_ref }}
 
       - name: 🚀 Deploy to preview
         uses: peaceiris/actions-gh-pages@v3
@@ -49,6 +52,7 @@ jobs:
           user_name: "github-actions[bot]"
           user_email: "github-actions[bot]@users.noreply.github.com"
           commit_message: "deploy(preview): 🔍 Deploy preview for PR #${{ github.event.number }}"
+          exclude_assets: ".github,**/.gitignore"
 
       - name: 💬 Find Comment
         uses: peter-evans/find-comment@v3
@@ -91,9 +95,12 @@ jobs:
         run: pnpm run build
         env:
           ASTRO_SITE: https://loqus.ai
-          ASTRO_BASE: /
+          ASTRO_BASE: /astro-tina-cms-example/
           SEGMENT_KEY: ${{ secrets.PROD_SEGMENT_KEY }}
           CHAT_URL: https://chat.loqus.ai
+          TINA_PUBLIC_CLIENT_ID: ${{ secrets.TINA_PUBLIC_CLIENT_ID }}
+          TINA_TOKEN: ${{ secrets.TINA_TOKEN }}
+          GITHUB_BRANCH: ${{ github.head_ref }}
 
       # - name: 🚀 Deploy to release
       #   uses: peaceiris/actions-gh-pages@v3
@@ -106,13 +113,14 @@ jobs:
       #     user_email: "github-actions[bot]@users.noreply.github.com"
       #     commit_message: "deploy(release): 🚀 Deploy site to release"
 
-      - name: 🚀 Deploy to preview
+      - name: 🚀 Deploy to release
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./dist
-          publish_branch: preview
+          publish_branch: release
           force_orphan: true
           user_name: "github-actions[bot]"
           user_email: "github-actions[bot]@users.noreply.github.com"
           commit_message: "deploy(preview): 🔍 Deploy preview for PR #${{ github.event.number }}"
+          exclude_assets: ".github,**/.gitignore"
