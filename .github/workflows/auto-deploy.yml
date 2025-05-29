@@ -52,6 +52,7 @@ jobs:
           user_name: "github-actions[bot]"
           user_email: "github-actions[bot]@users.noreply.github.com"
           commit_message: "deploy(preview): 🔍 Deploy preview for PR #${{ github.event.number }}"
+          exclude_assets: ".github,**/.gitignore"
 
       - name: 💬 Find Comment
         uses: peter-evans/find-comment@v3
@@ -112,7 +113,7 @@ jobs:
       #     user_email: "github-actions[bot]@users.noreply.github.com"
       #     commit_message: "deploy(release): 🚀 Deploy site to release"
 
-      - name: 🚀 Deploy to preview
+      - name: 🚀 Deploy to release
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
@@ -122,3 +123,4 @@ jobs:
           user_name: "github-actions[bot]"
           user_email: "github-actions[bot]@users.noreply.github.com"
           commit_message: "deploy(preview): 🔍 Deploy preview for PR #${{ github.event.number }}"
+          exclude_assets: ".github,**/.gitignore"
