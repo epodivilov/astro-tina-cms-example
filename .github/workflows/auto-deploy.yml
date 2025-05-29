@@ -38,6 +38,8 @@ jobs:
           ASTRO_BASE: /loqus-landing/
           SEGMENT_KEY: ${{ secrets.DEV_SEGMENT_KEY }}
           CHAT_URL: https://dev-chat.loqus.ai
+          TINA_PUBLIC_CLIENT_ID: ${{ secrets.TINA_PUBLIC_CLIENT_ID }}
+          TINA_TOKEN: ${{ secrets.TINA_TOKEN }}
 
       - name: 🚀 Deploy to preview
         uses: peaceiris/actions-gh-pages@v3
@@ -94,6 +96,8 @@ jobs:
           ASTRO_BASE: /
           SEGMENT_KEY: ${{ secrets.PROD_SEGMENT_KEY }}
           CHAT_URL: https://chat.loqus.ai
+          TINA_PUBLIC_CLIENT_ID: ${{ secrets.TINA_PUBLIC_CLIENT_ID }}
+          TINA_TOKEN: ${{ secrets.TINA_TOKEN }}
 
       # - name: 🚀 Deploy to release
       #   uses: peaceiris/actions-gh-pages@v3
