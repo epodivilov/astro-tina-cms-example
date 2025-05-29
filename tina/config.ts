@@ -21,6 +21,7 @@ export default defineConfig({
   build: {
     outputFolder: "admin",
     publicFolder: "public",
+    basePath: "astro-tina-cms-example"
   },
   media: {
     tina: {
