@@ -1,22 +1,46 @@
 ---
-import BaseHead from '../components/BaseHead.astro';
-import Header from '../components/Header.astro';
-import Footer from '../components/Footer.astro';
-import config from '../content/config/config.json';
-import client from '../../tina/__generated__/client';
-import HomePage from "../../tina/pages/HomePage.tsx";
-const data = await client.queries.page({relativePath: "home.mdx"});
+import BaseHead from "../components/BaseHead.astro";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import config from "../content/config/config.json";
+import client from "../../tina/__generated__/client";
 
+import HomePage from "../../tina/pages/HomePage";
+import { Blocks } from "../components/react/Blocks";
+import { tinaField } from "tinacms/dist/react";
+import type {
+  PageBlocks,
+  PageBlocksFeatures,
+} from "../../tina/__generated__/types";
+import { Features } from "../components/react/blocks/features";
+import FeatureList from "../components/FeatureList.astro";
+
+const data = await client.queries.page({ relativePath: "home.mdx" });
+const page = data.data.page;
 ---
 
 <!doctype html>
 <html lang="en">
-	<head>
-		<BaseHead title={config.seo.title} description={config.seo.description} />
-	</head>
-	<body>
-		<Header />
-		<HomePage {...data} client:tina />
-		<Footer />
-	</body>
+  <head>
+    <BaseHead title={config.seo.title} description={config.seo.description} />
+  </head>
+  <body>
+    <Header />
+    <HomePage {...data} client:tina>
+      <!-- <Blocks blocks={page.blocks as PageBlocks[]} /> -->
+      {
+        page.blocks?.map((block) => {
+          if (block?.__typename === "PageBlocksFeatures") {
+            return <FeatureList data={block as PageBlocksFeatures} />;
+          }
+
+          return null;
+        })
+      }
+    </HomePage>
+    <!-- <div data-tina-field={tinaField(page, "blocks")}>
+      <Blocks blocks={page.blocks as PageBlocks[]} />
+    </div> -->
+    <Footer />
+  </body>
 </html>

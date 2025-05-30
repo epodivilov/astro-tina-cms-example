@@ -25,7 +25,7 @@ const heroBlock: Template = {
   ],
 };
 
-const featureBlock: Template = {
+/* const featureBlock: Template = {
   name: "features",
   label: "Features",
   fields: [
@@ -48,7 +48,7 @@ const featureBlock: Template = {
       ],
     },
   ],
-};
+}; */
 
 const contentBlock: Template = {
   name: "content",
@@ -61,6 +61,26 @@ const contentBlock: Template = {
       },
       label: "Body",
       name: "body",
+    },
+  ],
+};
+
+const featureBlock: Template = {
+  name: "features",
+  label: "Features",
+  fields: [
+    {
+      type: "object",
+      label: "Feature Items",
+      name: "items",
+      list: true,
+      fields: [
+        {
+          type: "reference",
+          collections: ["feature"],
+          name: "feature",
+        },
+      ],
     },
   ],
 };
@@ -87,7 +107,7 @@ export const PageCollection: Collection = {
       name: "body",
       type: "rich-text",
       isBody: true,
-      required: true,
+      required: false,
     },
     {
       type: "object",

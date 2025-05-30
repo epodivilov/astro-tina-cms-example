@@ -45,6 +45,15 @@ importers:
       '@types/node':
         specifier: ^22.15.18
         version: 22.15.24
+      '@types/react':
+        specifier: ^19.1.6
+        version: 19.1.6
+      '@types/react-dom':
+        specifier: ^19.1.5
+        version: 19.1.5(@types/react@19.1.6)
+      typescript:
+        specifier: ^5.8.3
+        version: 5.8.3
 
 packages:
 
