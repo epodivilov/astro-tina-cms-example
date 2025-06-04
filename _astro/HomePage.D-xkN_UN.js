@@ -1,0 +1,1 @@
+import{u as n,j as e,t as s}from"./react.Clgolace.js";import"./index.BX2CdW4Z.js";const l=a=>{const{data:t}=n({query:a.query,variables:a.variables,data:a.data}),i=t.page;return e.jsx("main",{children:e.jsx("div",{"data-tina-field":s(i,"blocks"),children:a.children})})};export{l as default};
