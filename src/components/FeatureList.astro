@@ -1,0 +1,95 @@
+---
+import type { PageBlocksFeatures } from "../../tina/__generated__/types";
+import { Picture } from "astro:assets";
+import { TinaMarkdown } from "tinacms/dist/rich-text";
+
+interface Props {
+  data: PageBlocksFeatures;
+}
+
+const { data } = Astro.props;
+
+const featuresBlocks = data.items ?? [];
+
+const images = await import.meta.glob<{ default: ImageMetadata }>([
+  "/src/media/*.{jpeg,jpg,png,gif,webp,avif}",
+  "/src/media/*.{JPEG,JPG,PNG,GIF,WEBP,AVIF}",
+]);
+
+const optimizedImages = (
+  await Promise.all(
+    featuresBlocks.map(async (item) => {
+      if (!item?.feature) return null;
+
+      const { heroImage } = item.feature;
+
+      if (!heroImage || !images[heroImage]) return null;
+
+      return {
+        id: heroImage,
+        value: await images[heroImage](),
+      };
+    })
+  )
+).filter((item) => item !== null);
+---
+
+<section class="features-section py-20 bg-gradient-to-br from-gray-50 to-white">
+  <div class="container mx-auto px-4 max-w-7xl">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      {
+        featuresBlocks.map((item) => {
+          if (!item?.feature) return null;
+
+          const { title, description, heroImage, tags } = item.feature;
+
+          const optimizedImage = optimizedImages.find(
+            (image) => image.id === heroImage
+          );
+          console.log(
+            "🚧 ~ featuresBlocks.map ~ optimizedImage:",
+            optimizedImage
+          );
+
+          return (
+            <article class="group feature-card bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-xl hover:border-gray-200 transition-all duration-300 overflow-hidden">
+              {optimizedImage && (
+                <div class="aspect-video overflow-hidden bg-gray-100">
+                  <Picture
+                    src={optimizedImage.value.default}
+                    alt={title || "Feature image"}
+                    class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    formats={["webp", "avif"]}
+                  />
+                </div>
+              )}
+
+              <div class="p-6">
+                {tags && tags.length > 0 && (
+                  <div class="flex flex-wrap gap-2 mb-4">
+                    {tags.map(
+                      (tag) =>
+                        tag && (
+                          <span class="inline-block px-3 py-1 text-xs font-medium bg-blue-50 text-blue-700 rounded-full border border-blue-100">
+                            {tag}
+                          </span>
+                        )
+                    )}
+                  </div>
+                )}
+
+                {title && (
+                  <h3 class="text-xl font-bold mb-3 text-gray-900 group-hover:text-blue-600 transition-colors">
+                    {title}
+                  </h3>
+                )}
+
+                {description && <TinaMarkdown content={description} />}
+              </div>
+            </article>
+          );
+        })
+      }
+    </div>
+  </div>
+</section>
